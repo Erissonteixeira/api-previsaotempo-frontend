@@ -1,9 +1,14 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { cadastrarDadosMeteorologicos } from "../service/dadosMeteorologicosService";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  atualizarDadosMeteorologicos,
+  buscarDadosMeteorologicosPorId,
+  cadastrarDadosMeteorologicos,
+} from "../service/dadosMeteorologicosService";
 
 function CadastrarDadosMeteorologicos() {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [form, setForm] = useState({
     cidade: "",
@@ -18,6 +23,28 @@ function CadastrarDadosMeteorologicos() {
   });
 
   const [mensagem, setMensagem] = useState("");
+
+  useEffect(() => {
+    if (id) {
+      buscarDadosMeteorologicosPorId(Number(id))
+        .then((dados) => {
+          setForm({
+            cidade: dados.cidade,
+            dataPrevisao: dados.dataPrevisao,
+            tempoDia: dados.tempoDia,
+            tempoNoite: dados.tempoNoite,
+            temperaturaMaxima: dados.temperaturaMaxima,
+            temperaturaMinima: dados.temperaturaMinima,
+            precipitacao: dados.precipitacao,
+            humidade: dados.humidade,
+            velocidadeVento: dados.velocidadeVento,
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -39,23 +66,20 @@ function CadastrarDadosMeteorologicos() {
     e.preventDefault();
 
     try {
-      await cadastrarDadosMeteorologicos(form);
-      setMensagem("Dados cadastrados com sucesso.");
+      if (id) {
+        await atualizarDadosMeteorologicos(Number(id), form);
+        setMensagem("Dados atualizados com sucesso.");
+      } else {
+        await cadastrarDadosMeteorologicos(form);
+        setMensagem("Dados cadastrados com sucesso.");
+      }
 
-      setForm({
-        cidade: "",
-        dataPrevisao: "",
-        tempoDia: "",
-        tempoNoite: "",
-        temperaturaMaxima: 0,
-        temperaturaMinima: 0,
-        precipitacao: 0,
-        humidade: 0,
-        velocidadeVento: 0,
-      });
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } catch (error) {
       console.error(error);
-      setMensagem("Erro ao cadastrar os dados.");
+      setMensagem("Erro ao salvar os dados.");
     }
   };
 
@@ -69,7 +93,7 @@ function CadastrarDadosMeteorologicos() {
           marginBottom: "24px",
         }}
       >
-        <h1>Cadastrar Dados Meteorológicos</h1>
+        <h1>{id ? "Editar Dados Meteorológicos" : "Cadastrar Dados Meteorológicos"}</h1>
         <button onClick={() => navigate("/")}>Voltar</button>
       </div>
 
@@ -142,7 +166,7 @@ function CadastrarDadosMeteorologicos() {
           onChange={handleChange}
         />
 
-        <button type="submit">Cadastrar</button>
+        <button type="submit">{id ? "Salvar Alterações" : "Cadastrar"}</button>
       </form>
 
       {mensagem && <p style={{ marginTop: "16px" }}>{mensagem}</p>}

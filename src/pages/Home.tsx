@@ -98,7 +98,10 @@ function Home() {
                 </p>
               </div>
 
-              <button onClick={() => handleExcluir(item.id)}>Excluir</button>
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <button onClick={() => navigate(`/editar/${item.id}`)}>Editar</button>
+                <button onClick={() => handleExcluir(item.id)}>Excluir</button>
+              </div>
             </div>
           </div>
         ))

@@ -8,6 +8,7 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/cadastrar" element={<CadastrarDadosMeteorologicos />} />
+        <Route path="/editar/:id" element={<CadastrarDadosMeteorologicos />} />
       </Routes>
     </BrowserRouter>
   );
