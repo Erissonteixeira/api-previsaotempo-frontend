@@ -1,7 +1,7 @@
-import CadastrarDadosMeteorologicos from "./pages/CadastrarDadosMeteorologicos";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
-  return <CadastrarDadosMeteorologicos />;
+  return <AppRoutes />;
 }
 
 export default App;
