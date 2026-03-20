@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { api } from "../api/api";
 import type { DadosMeteorologicos } from "../types/DadosMeteorologicos";
+import { listarDadosMeteorologicos } from "../service/dadosMeteorologicosService";
 
 function Home() {
   const [dados, setDados] = useState<DadosMeteorologicos[]>([]);
 
   useEffect(() => {
-    api.get("/dados-meteorologicos?pagina=0&tamanho=10")
-      .then((res) => {
-        setDados(res.data.content ?? []);
+    listarDadosMeteorologicos()
+      .then((res: DadosMeteorologicos[]) => {
+        setDados(res);
       })
-      .catch((err) => {
+      .catch((err: unknown) => {
         console.error(err);
       });
   }, []);

@@ -1,7 +1,7 @@
-import Home from "./pages/Home";
+import CadastrarDadosMeteorologicos from "./pages/CadastrarDadosMeteorologicos";
 
 function App() {
-  return <Home />;
+  return <CadastrarDadosMeteorologicos />;
 }
 
 export default App;
