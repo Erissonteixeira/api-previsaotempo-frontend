@@ -1,21 +1,38 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { DadosMeteorologicos } from "../types/DadosMeteorologicos";
-import { listarDadosMeteorologicos } from "../service/dadosMeteorologicosService";
+import {
+  listarDadosMeteorologicos,
+  excluirDadosMeteorologicos,
+} from "../service/dadosMeteorologicosService";
 
 function Home() {
   const [dados, setDados] = useState<DadosMeteorologicos[]>([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const carregarDados = () => {
     listarDadosMeteorologicos()
       .then((res: DadosMeteorologicos[]) => {
         setDados(res);
       })
       .catch((err: unknown) => {
         console.error(err);
+        setDados([]);
       });
+  };
+
+  useEffect(() => {
+    carregarDados();
   }, []);
+
+  const handleExcluir = async (id: number) => {
+    try {
+      await excluirDadosMeteorologicos(id);
+      carregarDados();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div style={{ padding: "24px", color: "white" }}>
@@ -45,31 +62,44 @@ function Home() {
               backgroundColor: "#1e1e1e",
             }}
           >
-            <h2>{item.cidade}</h2>
-            <p>
-              <strong>Data:</strong> {item.dataPrevisao}
-            </p>
-            <p>
-              <strong>Tempo dia:</strong> {item.tempoDia}
-            </p>
-            <p>
-              <strong>Tempo noite:</strong> {item.tempoNoite}
-            </p>
-            <p>
-              <strong>Temperatura máxima:</strong> {item.temperaturaMaxima}°C
-            </p>
-            <p>
-              <strong>Temperatura mínima:</strong> {item.temperaturaMinima}°C
-            </p>
-            <p>
-              <strong>Precipitação:</strong> {item.precipitacao}
-            </p>
-            <p>
-              <strong>Humidade:</strong> {item.humidade}
-            </p>
-            <p>
-              <strong>Velocidade do vento:</strong> {item.velocidadeVento}
-            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "start",
+                gap: "16px",
+              }}
+            >
+              <div>
+                <h2>{item.cidade}</h2>
+                <p>
+                  <strong>Data:</strong> {item.dataPrevisao}
+                </p>
+                <p>
+                  <strong>Tempo dia:</strong> {item.tempoDia}
+                </p>
+                <p>
+                  <strong>Tempo noite:</strong> {item.tempoNoite}
+                </p>
+                <p>
+                  <strong>Temperatura máxima:</strong> {item.temperaturaMaxima}°C
+                </p>
+                <p>
+                  <strong>Temperatura mínima:</strong> {item.temperaturaMinima}°C
+                </p>
+                <p>
+                  <strong>Precipitação:</strong> {item.precipitacao}
+                </p>
+                <p>
+                  <strong>Humidade:</strong> {item.humidade}
+                </p>
+                <p>
+                  <strong>Velocidade do vento:</strong> {item.velocidadeVento}
+                </p>
+              </div>
+
+              <button onClick={() => handleExcluir(item.id)}>Excluir</button>
+            </div>
           </div>
         ))
       )}

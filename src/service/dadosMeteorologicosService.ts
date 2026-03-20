@@ -14,3 +14,7 @@ export const cadastrarDadosMeteorologicos = async (
   const response = await api.post("/dados-meteorologicos", dados);
   return response.data;
 };
+
+export const excluirDadosMeteorologicos = async (id: number): Promise<void> => {
+  await api.delete(`/dados-meteorologicos/${id}`);
+};
