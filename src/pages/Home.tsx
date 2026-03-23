@@ -9,6 +9,7 @@ import Layout from "../components/Layout";
 
 function Home() {
   const [dados, setDados] = useState<DadosMeteorologicos[]>([]);
+  const [filtroCidade, setFiltroCidade] = useState("");
   const navigate = useNavigate();
 
   const carregarDados = () => {
@@ -35,73 +36,69 @@ function Home() {
     }
   };
 
+  const dadosFiltrados = dados.filter((item) =>
+    item.cidade.toLowerCase().includes(filtroCidade.toLowerCase())
+  );
+
   return (
     <Layout>
       <section className="page-header">
         <h1 className="page-title">Lista de cidades</h1>
 
-        <div className="page-actions">
-          <button className="primary-button" onClick={() => navigate("/cadastrar")}>
-            Novo Cadastro
-          </button>
-        </div>
+        <button
+          className="primary-button"
+          onClick={() => navigate("/cadastrar")}
+        >
+          Novo Cadastro
+        </button>
       </section>
 
       <section className="card-section">
-        {dados.length === 0 ? (
-          <p className="empty-text">Nenhum dado encontrado.</p>
-        ) : (
-          <div className="weather-list">
-            {dados.map((item) => (
-              <div className="weather-card" key={item.id}>
-                <div className="weather-card-content">
-                  <div className="weather-main-info">
-                    <h2>{item.cidade}</h2>
-                    <p>
-                      <strong>Data:</strong> {item.dataPrevisao}
-                    </p>
-                    <p>
-                      <strong>Tempo dia:</strong> {item.tempoDia}
-                    </p>
-                    <p>
-                      <strong>Tempo noite:</strong> {item.tempoNoite}
-                    </p>
-                    <p>
-                      <strong>Temperatura máxima:</strong> {item.temperaturaMaxima}°C
-                    </p>
-                    <p>
-                      <strong>Temperatura mínima:</strong> {item.temperaturaMinima}°C
-                    </p>
-                    <p>
-                      <strong>Precipitação:</strong> {item.precipitacao}
-                    </p>
-                    <p>
-                      <strong>Humidade:</strong> {item.humidade}
-                    </p>
-                    <p>
-                      <strong>Velocidade do vento:</strong> {item.velocidadeVento}
-                    </p>
-                  </div>
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Buscar cidade..."
+            value={filtroCidade}
+            onChange={(e) => setFiltroCidade(e.target.value)}
+          />
+        </div>
 
-                  <div className="weather-card-actions">
-                    <button
-                      className="secondary-button"
-                      onClick={() => navigate(`/editar/${item.id}`)}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="danger-button"
-                      onClick={() => handleExcluir(item.id)}
-                    >
-                      Excluir
-                    </button>
-                  </div>
+        <div className="table-container">
+          <div className="table-header">
+            <span>Cidade</span>
+            <span>Data</span>
+            <span>Ação</span>
+          </div>
+
+          {dadosFiltrados.length === 0 ? (
+            <p className="empty-text">Nenhum dado encontrado.</p>
+          ) : (
+            dadosFiltrados.map((item) => (
+              <div className="table-row" key={item.id}>
+                <span>{item.cidade}</span>
+                <span>{item.dataPrevisao}</span>
+
+                <div className="table-actions">
+                  <button
+                    className="icon-button edit"
+                    onClick={() => navigate(`/editar/${item.id}`)}
+                    title="Editar"
+                  >
+                    ✏️
+                  </button>
+
+                  <button
+                    className="icon-button delete"
+                    onClick={() => handleExcluir(item.id)}
+                    title="Excluir"
+                  >
+                    🗑️
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
       </section>
     </Layout>
   );

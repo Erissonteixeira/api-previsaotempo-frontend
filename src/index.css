@@ -38,7 +38,11 @@ input {
   border: none;
   border-radius: 12px;
   padding: 12px 14px;
-  background: linear-gradient(180deg, rgba(164, 126, 255, 0.45) 0%, rgba(120, 88, 210, 0.35) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(164, 126, 255, 0.45) 0%,
+    rgba(120, 88, 210, 0.35) 100%
+  );
   color: #fff;
   outline: none;
 }
@@ -61,7 +65,11 @@ input::placeholder {
 }
 
 .topbar {
-  background: linear-gradient(180deg, rgba(161, 129, 255, 0.45) 0%, rgba(112, 82, 203, 0.35) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(161, 129, 255, 0.45) 0%,
+    rgba(112, 82, 203, 0.35) 100%
+  );
   border-radius: 16px;
   padding: 14px 22px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
@@ -143,7 +151,11 @@ input::placeholder {
 }
 
 .weather-card {
-  background: linear-gradient(180deg, rgba(152, 115, 244, 0.42) 0%, rgba(100, 68, 178, 0.38) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(152, 115, 244, 0.42) 0%,
+    rgba(100, 68, 178, 0.38) 100%
+  );
   border-radius: 16px;
   padding: 18px;
 }
@@ -195,7 +207,11 @@ input::placeholder {
 }
 
 .form-panel {
-  background: linear-gradient(180deg, rgba(147, 109, 236, 0.28) 0%, rgba(104, 75, 185, 0.22) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(147, 109, 236, 0.28) 0%,
+    rgba(104, 75, 185, 0.22) 100%
+  );
   border-radius: 18px;
   padding: 22px;
 }
@@ -218,12 +234,83 @@ input::placeholder {
 
 .footer-bar {
   margin-top: 28px;
-  background: linear-gradient(180deg, rgba(161, 129, 255, 0.45) 0%, rgba(112, 82, 203, 0.35) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(161, 129, 255, 0.45) 0%,
+    rgba(112, 82, 203, 0.35) 100%
+  );
   border-radius: 16px;
   text-align: center;
   padding: 12px;
   color: #f7efff;
   opacity: 0.9;
+}
+
+/* ===== LISTAGEM ===== */
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  width: 100%;
+  max-width: 340px;
+}
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 16px;
+  padding: 14px 16px;
+  font-weight: 800;
+  color: #f6efff;
+  opacity: 0.9;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: linear-gradient(
+    180deg,
+    rgba(152, 115, 244, 0.42) 0%,
+    rgba(100, 68, 178, 0.38) 100%
+  );
+}
+
+.table-row span {
+  word-break: break-word;
+}
+
+.table-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.icon-button {
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #fff;
+}
+
+.icon-button.edit {
+  background: linear-gradient(180deg, #8a73c6 0%, #6d5aa6 100%);
+}
+
+.icon-button.delete {
+  background: linear-gradient(180deg, #d46ea5 0%, #ab3f78 100%);
 }
 
 @media (max-width: 900px) {
@@ -237,6 +324,11 @@ input::placeholder {
 
   .weather-card-actions {
     flex-direction: row;
+  }
+
+  .table-header,
+  .table-row {
+    grid-template-columns: 1.5fr 1fr 1fr;
   }
 }
 
@@ -255,5 +347,18 @@ input::placeholder {
   .topnav {
     gap: 18px;
     flex-wrap: wrap;
+  }
+
+  .table-header {
+    display: none;
+  }
+
+  .table-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .table-actions {
+    justify-content: flex-start;
   }
 }
