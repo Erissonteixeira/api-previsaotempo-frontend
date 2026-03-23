@@ -5,6 +5,7 @@ import {
   buscarDadosMeteorologicosPorId,
   cadastrarDadosMeteorologicos,
 } from "../service/dadosMeteorologicosService";
+import Layout from "../components/Layout";
 
 function CadastrarDadosMeteorologicos() {
   const navigate = useNavigate();
@@ -84,93 +85,128 @@ function CadastrarDadosMeteorologicos() {
   };
 
   return (
-    <div style={{ padding: "24px", color: "white" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "24px",
-        }}
-      >
-        <h1>{id ? "Editar Dados Meteorológicos" : "Cadastrar Dados Meteorológicos"}</h1>
-        <button onClick={() => navigate("/")}>Voltar</button>
-      </div>
+    <Layout>
+      <section className="page-header">
+        <h1 className="page-title">
+          {id ? "Cadastro Metereológico" : "Cadastro Metereológico"}
+        </h1>
+      </section>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "12px",
-          maxWidth: "400px",
-        }}
-      >
-        <input
-          name="cidade"
-          placeholder="Cidade"
-          value={form.cidade}
-          onChange={handleChange}
-        />
-        <input
-          name="dataPrevisao"
-          type="date"
-          value={form.dataPrevisao}
-          onChange={handleChange}
-        />
-        <input
-          name="tempoDia"
-          placeholder="Tempo do dia"
-          value={form.tempoDia}
-          onChange={handleChange}
-        />
-        <input
-          name="tempoNoite"
-          placeholder="Tempo da noite"
-          value={form.tempoNoite}
-          onChange={handleChange}
-        />
-        <input
-          name="temperaturaMaxima"
-          type="number"
-          placeholder="Temperatura máxima"
-          value={form.temperaturaMaxima}
-          onChange={handleChange}
-        />
-        <input
-          name="temperaturaMinima"
-          type="number"
-          placeholder="Temperatura mínima"
-          value={form.temperaturaMinima}
-          onChange={handleChange}
-        />
-        <input
-          name="precipitacao"
-          type="number"
-          placeholder="Precipitação"
-          value={form.precipitacao}
-          onChange={handleChange}
-        />
-        <input
-          name="humidade"
-          type="number"
-          placeholder="Humidade"
-          value={form.humidade}
-          onChange={handleChange}
-        />
-        <input
-          name="velocidadeVento"
-          type="number"
-          placeholder="Velocidade do vento"
-          value={form.velocidadeVento}
-          onChange={handleChange}
-        />
+      <section className="form-card">
+        <form onSubmit={handleSubmit} className="weather-form">
+          <div className="form-grid top-grid">
+            <div className="form-group">
+              <label>Cidade</label>
+              <input
+                name="cidade"
+                placeholder="Cidade"
+                value={form.cidade}
+                onChange={handleChange}
+              />
+            </div>
 
-        <button type="submit">{id ? "Salvar Alterações" : "Cadastrar"}</button>
-      </form>
+            <div className="form-group small">
+              <label>Data</label>
+              <input
+                name="dataPrevisao"
+                type="date"
+                value={form.dataPrevisao}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
 
-      {mensagem && <p style={{ marginTop: "16px" }}>{mensagem}</p>}
-    </div>
+          <div className="form-panel">
+            <div className="form-grid bottom-grid">
+              <div className="form-group">
+                <label>Tempo do dia</label>
+                <input
+                  name="tempoDia"
+                  placeholder="Tempo do dia"
+                  value={form.tempoDia}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Tempo da noite</label>
+                <input
+                  name="tempoNoite"
+                  placeholder="Tempo da noite"
+                  value={form.tempoNoite}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Temperatura Máxima</label>
+                <input
+                  name="temperaturaMaxima"
+                  type="number"
+                  value={form.temperaturaMaxima}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Temperatura Mínima</label>
+                <input
+                  name="temperaturaMinima"
+                  type="number"
+                  value={form.temperaturaMinima}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Precipitação</label>
+                <input
+                  name="precipitacao"
+                  type="number"
+                  value={form.precipitacao}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Humidade</label>
+                <input
+                  name="humidade"
+                  type="number"
+                  value={form.humidade}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Velocidade do vento</label>
+                <input
+                  name="velocidadeVento"
+                  type="number"
+                  value={form.velocidadeVento}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="form-actions">
+            <button
+              type="button"
+              className="secondary-button"
+              onClick={() => navigate("/")}
+            >
+              Cancelar
+            </button>
+            <button type="submit" className="primary-button">
+              {id ? "Salvar" : "Salvar"}
+            </button>
+          </div>
+
+          {mensagem && <p className="feedback-text">{mensagem}</p>}
+        </form>
+      </section>
+    </Layout>
   );
 }
 

@@ -5,6 +5,7 @@ import {
   listarDadosMeteorologicos,
   excluirDadosMeteorologicos,
 } from "../service/dadosMeteorologicosService";
+import Layout from "../components/Layout";
 
 function Home() {
   const [dados, setDados] = useState<DadosMeteorologicos[]>([]);
@@ -35,78 +36,74 @@ function Home() {
   };
 
   return (
-    <div style={{ padding: "24px", color: "white" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "24px",
-        }}
-      >
-        <h1>Dados Meteorológicos</h1>
-        <button onClick={() => navigate("/cadastrar")}>Novo Cadastro</button>
-      </div>
+    <Layout>
+      <section className="page-header">
+        <h1 className="page-title">Lista de cidades</h1>
 
-      {dados.length === 0 ? (
-        <p>Nenhum dado encontrado.</p>
-      ) : (
-        dados.map((item) => (
-          <div
-            key={item.id}
-            style={{
-              border: "1px solid #444",
-              borderRadius: "8px",
-              padding: "16px",
-              marginBottom: "16px",
-              backgroundColor: "#1e1e1e",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "start",
-                gap: "16px",
-              }}
-            >
-              <div>
-                <h2>{item.cidade}</h2>
-                <p>
-                  <strong>Data:</strong> {item.dataPrevisao}
-                </p>
-                <p>
-                  <strong>Tempo dia:</strong> {item.tempoDia}
-                </p>
-                <p>
-                  <strong>Tempo noite:</strong> {item.tempoNoite}
-                </p>
-                <p>
-                  <strong>Temperatura máxima:</strong> {item.temperaturaMaxima}°C
-                </p>
-                <p>
-                  <strong>Temperatura mínima:</strong> {item.temperaturaMinima}°C
-                </p>
-                <p>
-                  <strong>Precipitação:</strong> {item.precipitacao}
-                </p>
-                <p>
-                  <strong>Humidade:</strong> {item.humidade}
-                </p>
-                <p>
-                  <strong>Velocidade do vento:</strong> {item.velocidadeVento}
-                </p>
-              </div>
+        <div className="page-actions">
+          <button className="primary-button" onClick={() => navigate("/cadastrar")}>
+            Novo Cadastro
+          </button>
+        </div>
+      </section>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <button onClick={() => navigate(`/editar/${item.id}`)}>Editar</button>
-                <button onClick={() => handleExcluir(item.id)}>Excluir</button>
+      <section className="card-section">
+        {dados.length === 0 ? (
+          <p className="empty-text">Nenhum dado encontrado.</p>
+        ) : (
+          <div className="weather-list">
+            {dados.map((item) => (
+              <div className="weather-card" key={item.id}>
+                <div className="weather-card-content">
+                  <div className="weather-main-info">
+                    <h2>{item.cidade}</h2>
+                    <p>
+                      <strong>Data:</strong> {item.dataPrevisao}
+                    </p>
+                    <p>
+                      <strong>Tempo dia:</strong> {item.tempoDia}
+                    </p>
+                    <p>
+                      <strong>Tempo noite:</strong> {item.tempoNoite}
+                    </p>
+                    <p>
+                      <strong>Temperatura máxima:</strong> {item.temperaturaMaxima}°C
+                    </p>
+                    <p>
+                      <strong>Temperatura mínima:</strong> {item.temperaturaMinima}°C
+                    </p>
+                    <p>
+                      <strong>Precipitação:</strong> {item.precipitacao}
+                    </p>
+                    <p>
+                      <strong>Humidade:</strong> {item.humidade}
+                    </p>
+                    <p>
+                      <strong>Velocidade do vento:</strong> {item.velocidadeVento}
+                    </p>
+                  </div>
+
+                  <div className="weather-card-actions">
+                    <button
+                      className="secondary-button"
+                      onClick={() => navigate(`/editar/${item.id}`)}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="danger-button"
+                      onClick={() => handleExcluir(item.id)}
+                    >
+                      Excluir
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))
-      )}
-    </div>
+        )}
+      </section>
+    </Layout>
   );
 }
 
