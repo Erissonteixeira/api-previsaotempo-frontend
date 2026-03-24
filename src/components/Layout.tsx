@@ -41,7 +41,7 @@ function Layout({ children }: LayoutProps) {
         <main className="content">{children}</main>
 
         <footer className="footer-bar">
-          <span>make with love</span>
+          <span>weather app</span>
         </footer>
       </div>
     </div>

@@ -60,10 +60,12 @@ function Home() {
               <div className="hero-left">
                 <p className="hero-date">{destaque.dataPrevisao}</p>
                 <h1 className="hero-city">{destaque.cidade}</h1>
+
                 <div className="hero-temp-block">
                   <span className="hero-icon">
                     {obterIconeClima(destaque.tempoDia)}
                   </span>
+
                   <div>
                     <h2 className="hero-temp">{destaque.temperaturaMaxima}°C</h2>
                     <p className="hero-climate">{destaque.tempoDia}</p>
@@ -73,17 +75,34 @@ function Home() {
 
               <div className="hero-right">
                 <div className="hero-info-box">
-                  <p><strong>Tempo noite:</strong> {destaque.tempoNoite}</p>
-                  <p><strong>Mínima:</strong> {destaque.temperaturaMinima}°C</p>
-                  <p><strong>Precipitação:</strong> {destaque.precipitacao}</p>
-                  <p><strong>Humidade:</strong> {destaque.humidade}</p>
-                  <p><strong>Vento:</strong> {destaque.velocidadeVento}</p>
+                  <div className="hero-info-row">
+                    <span>Tempo noite</span>
+                    <strong>{destaque.tempoNoite}</strong>
+                  </div>
+                  <div className="hero-info-row">
+                    <span>Mínima</span>
+                    <strong>{destaque.temperaturaMinima}°C</strong>
+                  </div>
+                  <div className="hero-info-row">
+                    <span>Precipitação</span>
+                    <strong>{destaque.precipitacao}</strong>
+                  </div>
+                  <div className="hero-info-row">
+                    <span>Humidade</span>
+                    <strong>{destaque.humidade}</strong>
+                  </div>
+                  <div className="hero-info-row">
+                    <span>Vento</span>
+                    <strong>{destaque.velocidadeVento}</strong>
+                  </div>
                 </div>
               </div>
             </section>
 
             <section className="forecast-section">
-              <h2 className="forecast-title">Próximos 7 dias</h2>
+              <div className="forecast-header">
+                <h2 className="forecast-title">Próximos 7 dias</h2>
+              </div>
 
               <div className="forecast-grid">
                 {proximosDias.map((item) => (
