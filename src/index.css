@@ -224,8 +224,11 @@ input::placeholder {
   gap: 20px;
 }
 
-.big-icon {
-  font-size: 72px;
+.main-weather-icon {
+  width: 110px;
+  height: 95px;
+  object-fit: contain;
+  display: block;
 }
 
 .main-temp h1 {
@@ -289,8 +292,12 @@ input::placeholder {
   font-size: 1.1rem;
 }
 
-.day-climate .icon {
-  font-size: 32px;
+.day-weather-icon {
+  width: 68px;
+  height: 60px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
 }
 
 .day-temp {

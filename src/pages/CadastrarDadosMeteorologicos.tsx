@@ -24,6 +24,7 @@ function CadastrarDadosMeteorologicos() {
   });
 
   const [mensagem, setMensagem] = useState("");
+  const [salvando, setSalvando] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -43,6 +44,7 @@ function CadastrarDadosMeteorologicos() {
         })
         .catch((error) => {
           console.error(error);
+          setMensagem("Erro ao carregar os dados para edição.");
         });
     }
   }, [id]);
@@ -65,6 +67,8 @@ function CadastrarDadosMeteorologicos() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setMensagem("");
+    setSalvando(true);
 
     try {
       if (id) {
@@ -77,10 +81,12 @@ function CadastrarDadosMeteorologicos() {
 
       setTimeout(() => {
         navigate("/listar");
-      }, 1000);
+      }, 800);
     } catch (error) {
       console.error(error);
       setMensagem("Erro ao salvar os dados.");
+    } finally {
+      setSalvando(false);
     }
   };
 
@@ -205,8 +211,8 @@ function CadastrarDadosMeteorologicos() {
                 Cancelar
               </button>
 
-              <button type="submit" className="primary-button">
-                Salvar
+              <button type="submit" className="primary-button" disabled={salvando}>
+                {salvando ? "Salvando..." : "Salvar"}
               </button>
             </div>
 

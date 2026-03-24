@@ -4,7 +4,7 @@ import type { DadosMeteorologicos } from "../types/DadosMeteorologicos";
 export type DadosMeteorologicosRequest = Omit<DadosMeteorologicos, "id">;
 
 export const listarDadosMeteorologicos = async (): Promise<DadosMeteorologicos[]> => {
-  const response = await api.get("/dados-meteorologicos?pagina=0&tamanho=10");
+  const response = await api.get("/dados-meteorologicos?pagina=0&tamanho=50");
   return response.data.content ?? [];
 };
 
