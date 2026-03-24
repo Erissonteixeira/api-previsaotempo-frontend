@@ -23,12 +23,14 @@ function Layout({ children }: LayoutProps) {
             <Link className={isActive("/") ? "nav-link active" : "nav-link"} to="/">
               Home
             </Link>
+
             <Link
               className={isActive("/cadastrar") ? "nav-link active" : "nav-link"}
               to="/cadastrar"
             >
               Cadastrar
             </Link>
+
             <Link
               className={isActive("/listar") ? "nav-link active" : "nav-link"}
               to="/listar"

@@ -1,107 +1,100 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import type { DadosMeteorologicos } from "../types/DadosMeteorologicos";
-import {
-  listarDadosMeteorologicos,
-  excluirDadosMeteorologicos,
-} from "../service/dadosMeteorologicosService";
+import { useEffect, useMemo, useState } from "react";
 import Layout from "../components/Layout";
+import type { DadosMeteorologicos } from "../types/DadosMeteorologicos";
+import { listarDadosMeteorologicos } from "../service/dadosMeteorologicosService";
 
-function HomeListagem() {
+function Home() {
   const [dados, setDados] = useState<DadosMeteorologicos[]>([]);
-  const [filtroCidade, setFiltroCidade] = useState("");
-  const navigate = useNavigate();
+  const [busca, setBusca] = useState("");
 
-  const carregarDados = () => {
+  useEffect(() => {
     listarDadosMeteorologicos()
       .then((res: DadosMeteorologicos[]) => {
         setDados(res);
       })
-      .catch((err: unknown) => {
-        console.error(err);
-        setDados([]);
-      });
-  };
-
-  useEffect(() => {
-    carregarDados();
+      .catch(() => setDados([]));
   }, []);
 
-  const handleExcluir = async (id: number) => {
-    try {
-      await excluirDadosMeteorologicos(id);
-      carregarDados();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const dadosFiltrados = useMemo(() => {
+    if (!busca.trim()) return dados;
+    return dados.filter((item) =>
+      item.cidade.toLowerCase().includes(busca.toLowerCase())
+    );
+  }, [dados, busca]);
 
-  const dadosFiltrados = dados.filter((item) =>
-    item.cidade.toLowerCase().includes(filtroCidade.toLowerCase())
-  );
+  const destaque = dadosFiltrados[0];
+  const proximosDias = dadosFiltrados.slice(0, 7);
 
   return (
     <Layout>
-      <section className="page-header">
-        <h1 className="page-title">Lista de cidades</h1>
+      <div className="home-wrapper">
+        <div className="home-top">
+          <h2>Hoje</h2>
 
-        <button
-          className="primary-button"
-          onClick={() => navigate("/cadastrar")}
-        >
-          Novo Cadastro
-        </button>
-      </section>
-
-      <section className="card-section">
-        <div className="search-bar">
-          <input
-            type="text"
-            placeholder="Buscar cidade..."
-            value={filtroCidade}
-            onChange={(e) => setFiltroCidade(e.target.value)}
-          />
-        </div>
-
-        <div className="table-container">
-          <div className="table-header">
-            <span>Cidade</span>
-            <span>Data</span>
-            <span>Ação</span>
+          <div className="search-box">
+            <label>Pesquise a cidade</label>
+            <input
+              type="text"
+              placeholder="Buscar cidade..."
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+            />
           </div>
-
-          {dadosFiltrados.length === 0 ? (
-            <p className="empty-text">Nenhum dado encontrado.</p>
-          ) : (
-            dadosFiltrados.map((item) => (
-              <div className="table-row" key={item.id}>
-                <span>{item.cidade}</span>
-                <span>{item.dataPrevisao}</span>
-
-                <div className="table-actions">
-                  <button
-                    className="icon-button edit"
-                    onClick={() => navigate(`/editar/${item.id}`)}
-                    title="Editar"
-                  >
-                    ✏️
-                  </button>
-
-                  <button
-                    className="icon-button delete"
-                    onClick={() => handleExcluir(item.id)}
-                    title="Excluir"
-                  >
-                    🗑️
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
         </div>
-      </section>
+
+        {destaque && (
+          <div className="main-weather-card">
+            <div className="main-left">
+              <div className="big-icon">☁️</div>
+
+              <div className="main-temp">
+                <h1>{destaque.temperaturaMaxima}°</h1>
+                <span>{destaque.temperaturaMinima}°</span>
+              </div>
+            </div>
+
+            <div className="main-right">
+              <div className="info-item">
+                <span>🌂</span>
+                <p>{destaque.precipitacao}%</p>
+                <small>Precipitação</small>
+              </div>
+
+              <div className="info-item">
+                <span>💧</span>
+                <p>{destaque.humidade}%</p>
+                <small>Humidade</small>
+              </div>
+
+              <div className="info-item">
+                <span>🌬️</span>
+                <p>{destaque.velocidadeVento}km/h</p>
+                <small>Vento</small>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="days-list">
+          {proximosDias.map((item) => (
+            <div key={item.id} className="day-row">
+              <div className="day-date">{item.dataPrevisao}</div>
+
+              <div className="day-climate">
+                <span className="icon">☀️</span>
+                <span>{item.tempoDia}</span>
+              </div>
+
+              <div className="day-temp">
+                <strong>+{item.temperaturaMaxima}</strong>
+                <span>+{item.temperaturaMinima}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </Layout>
   );
 }
 
-export default HomeListagem;
+export default Home;
