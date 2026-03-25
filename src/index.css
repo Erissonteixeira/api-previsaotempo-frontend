@@ -170,6 +170,17 @@ input::placeholder {
   padding: 12px;
   color: #f7efff;
   opacity: 0.9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.footer-logo {
+  height: 20px;
+  width: auto;
+  object-fit: contain;
+  display: inline-block;
 }
 
 /* HOME */
@@ -251,9 +262,12 @@ input::placeholder {
   text-align: center;
 }
 
-.info-item span {
-  font-size: 32px;
+.info-icon {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
   display: block;
+  margin: 0 auto 8px;
 }
 
 .info-item p {
@@ -392,59 +406,104 @@ input::placeholder {
   padding: 26px;
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
   max-width: 980px;
-}
-
-.cadastro-form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 30px;
 }
 
-.cadastro-row {
+.cadastro-top {
   display: grid;
-  gap: 24px;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 30px;
 }
 
-.cadastro-row-top {
-  grid-template-columns: 1.5fr 0.8fr;
-  align-items: end;
+.cadastro-top-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.cadastro-panel {
+.cadastro-top-field label {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.cadastro-top-field input {
+  width: 100%;
+}
+
+.cadastro-top-date {
+  max-width: 280px;
+}
+
+.cadastro-panel-figma {
   background: linear-gradient(
     180deg,
     rgba(147, 109, 236, 0.28) 0%,
     rgba(104, 75, 185, 0.22) 100%
   );
-  border-radius: 22px;
-  padding: 24px;
-}
-
-.cadastro-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(240px, 1fr));
-  gap: 20px 26px;
-}
-
-.cadastro-field {
+  padding: 28px;
+  border-radius: 18px;
   display: flex;
-  align-items: center;
-  gap: 18px;
+  flex-direction: column;
+  gap: 28px;
 }
 
-.cadastro-field label {
-  min-width: 170px;
+.cadastro-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-title {
   font-weight: 700;
   font-size: 1rem;
-  white-space: nowrap;
 }
 
-.cadastro-field input {
+.chip-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: white;
+  min-width: 88px;
+}
+
+.chip.active {
+  background: #8c67ff;
+}
+
+.grid-numerico {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 24px 32px;
+  align-items: start;
+}
+
+.grid-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.grid-field label {
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: 700;
+}
+
+.grid-field input {
   width: 100%;
-}
-
-.cadastro-field-small label {
-  min-width: 70px;
+  height: 48px;
+  border-radius: 16px;
+  padding: 0 14px;
+  font-size: 16px;
 }
 
 .cadastro-actions {
@@ -478,19 +537,13 @@ input::placeholder {
     grid-template-columns: 1.5fr 1fr 1fr;
   }
 
-  .cadastro-row-top,
-  .cadastro-grid {
+  .cadastro-top,
+  .grid-numerico {
     grid-template-columns: 1fr;
   }
 
-  .cadastro-field {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .cadastro-field label {
-    min-width: auto;
+  .cadastro-top-date {
+    max-width: none;
   }
 }
 

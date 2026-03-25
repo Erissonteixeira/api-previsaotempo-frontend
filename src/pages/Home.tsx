@@ -11,15 +11,17 @@ import nublado1 from "../assets/weather/nublado1.png";
 import nublado2 from "../assets/weather/nublado2.png";
 import tempestade from "../assets/weather/tempestade.png";
 
+import precipitacaoIcon from "../assets/weather/precipitacao.png";
+import humidadeIcon from "../assets/weather/humidade.png";
+import ventoIcon from "../assets/weather/vento.png";
+
 function Home() {
   const [dados, setDados] = useState<DadosMeteorologicos[]>([]);
   const [busca, setBusca] = useState("");
 
   useEffect(() => {
     listarDadosMeteorologicos()
-      .then((res: DadosMeteorologicos[]) => {
-        setDados(res);
-      })
+      .then((res) => setDados(res))
       .catch(() => setDados([]));
   }, []);
 
@@ -33,7 +35,6 @@ function Home() {
   const destaque = dadosFiltrados[0];
   const proximosDias = dadosFiltrados.slice(0, 7);
 
-  // 🔥 NORMALIZAÇÃO FORTE (resolve TODOS os casos)
   const normalizarTexto = (valor: unknown) => {
     return String(valor ?? "")
       .normalize("NFD")
@@ -46,19 +47,12 @@ function Home() {
     const valor = normalizarTexto(tempo);
 
     if (!valor) return nublado1;
-
     if (valor.includes("tempestade")) return tempestade;
-
     if (valor.includes("chuva") && valor.includes("noite")) return nubladochuva;
-
     if (valor.includes("chuva")) return solcomchuva;
-
     if (valor.includes("sol") && valor.includes("nuvem")) return solcomnuvem;
-
     if (valor.includes("sol") || valor.includes("ensolarado")) return sol;
-
     if (valor.includes("nublado") && valor.includes("noite")) return nublado2;
-
     if (valor.includes("nublado")) return nublado1;
 
     return nublado1;
@@ -86,6 +80,7 @@ function Home() {
             <div className="main-left">
               <img
                 src={obterIconeClima(destaque.tempoDia)}
+                alt={String(destaque.tempoDia ?? "")}
                 className="main-weather-icon"
               />
 
@@ -97,21 +92,33 @@ function Home() {
 
             <div className="main-right">
               <div className="info-item">
-                <span>🌂</span>
+                <img
+                  src={precipitacaoIcon}
+                  alt="Precipitação"
+                  className="info-icon"
+                />
                 <p>{destaque.precipitacao}%</p>
                 <small>Precipitação</small>
               </div>
 
               <div className="info-item">
-                <span>💧</span>
+                <img
+                  src={humidadeIcon}
+                  alt="Humidade"
+                  className="info-icon"
+                />
                 <p>{destaque.humidade}%</p>
                 <small>Humidade</small>
               </div>
 
               <div className="info-item">
-                <span>🌬️</span>
+                <img
+                  src={ventoIcon}
+                  alt="Velocidade do vento"
+                  className="info-icon"
+                />
                 <p>{destaque.velocidadeVento}km/h</p>
-                <small>Vento</small>
+                <small>Velocidade vento</small>
               </div>
             </div>
           </div>
@@ -125,6 +132,7 @@ function Home() {
               <div className="day-climate">
                 <img
                   src={obterIconeClima(item.tempoDia)}
+                  alt={String(item.tempoDia ?? "")}
                   className="day-weather-icon"
                 />
                 <span>{item.tempoDia}</span>

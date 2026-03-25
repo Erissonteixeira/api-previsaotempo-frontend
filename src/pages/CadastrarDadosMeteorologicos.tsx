@@ -7,6 +7,9 @@ import {
 } from "../service/dadosMeteorologicosService";
 import Layout from "../components/Layout";
 
+const TEMPOS = ["sol", "sol com nuvens", "chuva", "tempestade", "nublado"];
+const TURNOS = ["manhã", "noite"];
+
 function CadastrarDadosMeteorologicos() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -23,31 +26,34 @@ function CadastrarDadosMeteorologicos() {
     velocidadeVento: 0,
   });
 
+  const [turnoSelecionado, setTurnoSelecionado] = useState<"manhã" | "noite">("manhã");
   const [mensagem, setMensagem] = useState("");
-  const [salvando, setSalvando] = useState(false);
 
   useEffect(() => {
     if (id) {
-      buscarDadosMeteorologicosPorId(Number(id))
-        .then((dados) => {
-          setForm({
-            cidade: dados.cidade,
-            dataPrevisao: dados.dataPrevisao,
-            tempoDia: dados.tempoDia,
-            tempoNoite: dados.tempoNoite,
-            temperaturaMaxima: dados.temperaturaMaxima,
-            temperaturaMinima: dados.temperaturaMinima,
-            precipitacao: dados.precipitacao,
-            humidade: dados.humidade,
-            velocidadeVento: dados.velocidadeVento,
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-          setMensagem("Erro ao carregar os dados para edição.");
+      buscarDadosMeteorologicosPorId(Number(id)).then((dados) => {
+        setForm({
+          cidade: dados.cidade,
+          dataPrevisao: dados.dataPrevisao,
+          tempoDia: dados.tempoDia,
+          tempoNoite: dados.tempoNoite,
+          temperaturaMaxima: dados.temperaturaMaxima,
+          temperaturaMinima: dados.temperaturaMinima,
+          precipitacao: dados.precipitacao,
+          humidade: dados.humidade,
+          velocidadeVento: dados.velocidadeVento,
         });
+      });
     }
   }, [id]);
+
+  const selecionarTempo = (valor: string) => {
+    if (turnoSelecionado === "manhã") {
+      setForm((prev) => ({ ...prev, tempoDia: valor }));
+    } else {
+      setForm((prev) => ({ ...prev, tempoNoite: valor }));
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -68,158 +74,164 @@ function CadastrarDadosMeteorologicos() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMensagem("");
-    setSalvando(true);
 
     try {
       if (id) {
         await atualizarDadosMeteorologicos(Number(id), form);
-        setMensagem("Dados atualizados com sucesso.");
       } else {
         await cadastrarDadosMeteorologicos(form);
-        setMensagem("Dados cadastrados com sucesso.");
       }
 
-      setTimeout(() => {
-        navigate("/listar");
-      }, 800);
-    } catch (error) {
-      console.error(error);
+      navigate("/listar");
+    } catch {
       setMensagem("Erro ao salvar os dados.");
-    } finally {
-      setSalvando(false);
     }
   };
 
   return (
     <Layout>
-      <section className="cadastro-wrapper">
+      <div className="cadastro-wrapper">
         <h1 className="cadastro-title">Cadastro Metereológico</h1>
 
-        <div className="cadastro-card">
-          <form onSubmit={handleSubmit} className="cadastro-form">
-            <div className="cadastro-row cadastro-row-top">
-              <div className="cadastro-field">
-                <label htmlFor="cidade">Cidade</label>
+        <form onSubmit={handleSubmit} className="cadastro-card">
+          <div className="cadastro-top">
+            <div className="cadastro-top-field">
+              <label htmlFor="cidade">Cidade</label>
+              <input
+                id="cidade"
+                name="cidade"
+                value={form.cidade}
+                onChange={handleChange}
+                placeholder="Cidade"
+              />
+            </div>
+
+            <div className="cadastro-top-field cadastro-top-date">
+              <label htmlFor="dataPrevisao">Data</label>
+              <input
+                id="dataPrevisao"
+                type="date"
+                name="dataPrevisao"
+                value={form.dataPrevisao}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="cadastro-panel-figma">
+            <div className="cadastro-section">
+              <label className="section-title">Tempo</label>
+              <div className="chip-group">
+                {TEMPOS.map((tempo) => {
+                  const ativo =
+                    (turnoSelecionado === "manhã" && form.tempoDia === tempo) ||
+                    (turnoSelecionado === "noite" && form.tempoNoite === tempo);
+
+                  return (
+                    <button
+                      type="button"
+                      key={tempo}
+                      className={`chip ${ativo ? "active" : ""}`}
+                      onClick={() => selecionarTempo(tempo)}
+                    >
+                      {tempo}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="cadastro-section">
+              <label className="section-title">Turno</label>
+              <div className="chip-group">
+                {TURNOS.map((turno) => (
+                  <button
+                    type="button"
+                    key={turno}
+                    className={`chip ${turnoSelecionado === turno ? "active" : ""}`}
+                    onClick={() => setTurnoSelecionado(turno as "manhã" | "noite")}
+                  >
+                    {turno}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid-numerico">
+              <div className="grid-field">
+                <label htmlFor="temperaturaMaxima">Temperatura Máxima</label>
                 <input
-                  id="cidade"
-                  name="cidade"
-                  placeholder="Cidade"
-                  value={form.cidade}
+                  id="temperaturaMaxima"
+                  type="number"
+                  name="temperaturaMaxima"
+                  value={form.temperaturaMaxima}
                   onChange={handleChange}
                 />
               </div>
 
-              <div className="cadastro-field cadastro-field-small">
-                <label htmlFor="dataPrevisao">Data</label>
+              <div className="grid-field">
+                <label htmlFor="temperaturaMinima">Temperatura Mínima</label>
                 <input
-                  id="dataPrevisao"
-                  name="dataPrevisao"
-                  type="date"
-                  value={form.dataPrevisao}
+                  id="temperaturaMinima"
+                  type="number"
+                  name="temperaturaMinima"
+                  value={form.temperaturaMinima}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="grid-field">
+                <label htmlFor="precipitacao">Precipitação</label>
+                <input
+                  id="precipitacao"
+                  type="number"
+                  name="precipitacao"
+                  value={form.precipitacao}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="grid-field">
+                <label htmlFor="humidade">Humidade</label>
+                <input
+                  id="humidade"
+                  type="number"
+                  name="humidade"
+                  value={form.humidade}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="grid-field">
+                <label htmlFor="velocidadeVento">Velocidade do vento</label>
+                <input
+                  id="velocidadeVento"
+                  type="number"
+                  name="velocidadeVento"
+                  value={form.velocidadeVento}
                   onChange={handleChange}
                 />
               </div>
             </div>
+          </div>
 
-            <div className="cadastro-panel">
-              <div className="cadastro-grid">
-                <div className="cadastro-field">
-                  <label htmlFor="tempoDia">Tempo do dia</label>
-                  <input
-                    id="tempoDia"
-                    name="tempoDia"
-                    placeholder="Tempo do dia"
-                    value={form.tempoDia}
-                    onChange={handleChange}
-                  />
-                </div>
+          <div className="cadastro-actions">
+            <button
+              type="button"
+              onClick={() => navigate("/listar")}
+              className="secondary-button"
+            >
+              Cancelar
+            </button>
 
-                <div className="cadastro-field">
-                  <label htmlFor="tempoNoite">Tempo da noite</label>
-                  <input
-                    id="tempoNoite"
-                    name="tempoNoite"
-                    placeholder="Tempo da noite"
-                    value={form.tempoNoite}
-                    onChange={handleChange}
-                  />
-                </div>
+            <button type="submit" className="primary-button">
+              Salvar
+            </button>
+          </div>
 
-                <div className="cadastro-field">
-                  <label htmlFor="temperaturaMaxima">Temperatura Máxima</label>
-                  <input
-                    id="temperaturaMaxima"
-                    name="temperaturaMaxima"
-                    type="number"
-                    value={form.temperaturaMaxima}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="cadastro-field">
-                  <label htmlFor="temperaturaMinima">Temperatura Mínima</label>
-                  <input
-                    id="temperaturaMinima"
-                    name="temperaturaMinima"
-                    type="number"
-                    value={form.temperaturaMinima}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="cadastro-field">
-                  <label htmlFor="precipitacao">Precipitação</label>
-                  <input
-                    id="precipitacao"
-                    name="precipitacao"
-                    type="number"
-                    value={form.precipitacao}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="cadastro-field">
-                  <label htmlFor="humidade">Humidade</label>
-                  <input
-                    id="humidade"
-                    name="humidade"
-                    type="number"
-                    value={form.humidade}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="cadastro-field">
-                  <label htmlFor="velocidadeVento">Velocidade do vento</label>
-                  <input
-                    id="velocidadeVento"
-                    name="velocidadeVento"
-                    type="number"
-                    value={form.velocidadeVento}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="cadastro-actions">
-              <button
-                type="button"
-                className="secondary-button"
-                onClick={() => navigate("/listar")}
-              >
-                Cancelar
-              </button>
-
-              <button type="submit" className="primary-button" disabled={salvando}>
-                {salvando ? "Salvando..." : "Salvar"}
-              </button>
-            </div>
-
-            {mensagem && <p className="feedback-text">{mensagem}</p>}
-          </form>
-        </div>
-      </section>
+          {mensagem && <p className="feedback-text">{mensagem}</p>}
+        </form>
+      </div>
     </Layout>
   );
 }

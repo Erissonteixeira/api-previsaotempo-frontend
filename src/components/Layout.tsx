@@ -1,49 +1,31 @@
-import { Link, useLocation } from "react-router-dom";
-import type { ReactNode } from "react";
+import { NavLink } from "react-router-dom";
+import dbLogo from "../assets/weather/db.png";
 
-type LayoutProps = {
-  children: ReactNode;
-};
-
-function Layout({ children }: LayoutProps) {
-  const location = useLocation();
-
-  const isActive = (path: string) => {
-    if (path === "/" && location.pathname === "/") return true;
-    if (path === "/cadastrar" && location.pathname.startsWith("/cadastrar")) return true;
-    if (path === "/listar" && location.pathname.startsWith("/listar")) return true;
-    return false;
-  };
-
+function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="app-bg">
       <div className="app-shell">
         <header className="topbar">
           <nav className="topnav">
-            <Link className={isActive("/") ? "nav-link active" : "nav-link"} to="/">
+            <NavLink to="/" className="nav-link">
               Home
-            </Link>
+            </NavLink>
 
-            <Link
-              className={isActive("/cadastrar") ? "nav-link active" : "nav-link"}
-              to="/cadastrar"
-            >
+            <NavLink to="/cadastrar" className="nav-link">
               Cadastrar
-            </Link>
+            </NavLink>
 
-            <Link
-              className={isActive("/listar") ? "nav-link active" : "nav-link"}
-              to="/listar"
-            >
+            <NavLink to="/listar" className="nav-link">
               Listar
-            </Link>
+            </NavLink>
           </nav>
         </header>
 
         <main className="content">{children}</main>
 
         <footer className="footer-bar">
-          <span>weather app</span>
+          <span>make with love</span>
+          <img src={dbLogo} alt="db" className="footer-logo" />
         </footer>
       </div>
     </div>
